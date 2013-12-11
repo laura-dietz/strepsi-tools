@@ -63,6 +63,10 @@ object SeqTools {
     seq.groupBy(_._1).map(entry => (entry._1, entry._2.map(_._2)))
   }
 
+  def mapValuesToSet[A,B](map:Map[A, Iterable[B]]):Map[A, Set[B]] = {
+    map.map(entry => entry._1 -> entry._2.toSet)
+  }
+
   def aggregateMapList[A,B,C](map:Map[A,Iterable[B]], by:Iterable[B]=>C):Map[A,C] = {
     for ((key,seq) <- map) yield key -> by(seq)
   }
