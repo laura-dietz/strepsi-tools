@@ -14,10 +14,17 @@ object MainTools {
   }
 
 
-  def strsFromArgs(args: Array[String], prefix: String): Seq[String] = {
+  def strsFromArgs(args: Array[String], prefix: String, min: Int = -1, cutPrefix: Boolean = false): Seq[String] = {
     val found = args.toSeq.filter(_.startsWith(prefix))
+    if (min >= 0 && found.length < min) {
+      throw new IllegalArgumentException("Required at least " + min + " entries starting with " + prefix + " but got \"" + found.mkString(" ") + "\". Total arguments: \"" + args.mkString(" ") + "\"")
+    }
     val res = found.map(_.substring(prefix.length))
-    res.map(_.replaceAllLiterally("_"," "))
+    val res2 =
+      if (cutPrefix) {
+        res.map(arg => StringTools.substringMinusEnd(arg, 0, prefix.length))
+      } else res
+    res2.map(_.replaceAllLiterally("_", " "))
   }
 
   def strsPlainFromArgs(args: Array[String], prefix: String): Seq[String] = {
