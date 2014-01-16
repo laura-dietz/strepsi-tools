@@ -122,6 +122,16 @@ object SeqTools {
       ).toMap
   }
 
+  def sumSeqs[K](maps: Seq[Seq[(K, Double)]]): Seq[(K, Double)] = {
+    val flattenMaps = maps.flatten
+    (
+      for ((key, entries) <- flattenMaps.groupBy(_._1)) yield {
+        val values = entries.map(_._2)
+        key -> values.sum
+      }
+      ).toSeq
+  }
+
 
   def mergeMaps[K, V](maps:Seq[Map[K,Seq[V]]]):Map[K,Seq[V]] ={
     val flattenMaps = maps.map(_.toSeq).flatten

@@ -9,7 +9,7 @@ object RelevanceModel {
   def buildRm(scoredText: Seq[(Double, Seq[String])], topK: Int): Seq[(String, Double)] = {
     val scoredProbText = LogTools.normLogProbs(scoredText.map(_._1)).zip(scoredText.map(_._2))
     val scoredTerms =
-      for ((docProb, text) <- scoredProbText; term <- text) yield (term, docProb)
+      for ((docProb, text) <- scoredProbText; term <- text) yield (term, docProb / text.length)
     val term2probList = SeqTools.groupByKey(scoredTerms)
     val term2Prob = SeqTools.aggregateMapList[String, Double, Double](term2probList, by = _.sum)
     SeqTools.topK(term2Prob.toSeq, topK).sortBy(-_._2)
