@@ -8,8 +8,8 @@ import java.io.File
  * Time: 2:28 PM
  */
 object FileTools {
-  def introduceCleanFile(filename:String):File = {
-    val dir = filename.substring(0,filename.lastIndexOf(File.separatorChar))
+  def introduceCleanFile(filename: String): File = {
+    val dir = filename.substring(0, filename.lastIndexOf(File.separatorChar))
     new File(dir).mkdirs()
 
     // delete old file
@@ -21,8 +21,8 @@ object FileTools {
     filehandle
   }
 
-  def makeNecessaryDirs(filename:String){
-    val dirname = filename.substring(0,filename.lastIndexOf(File.separatorChar))
+  def makeNecessaryDirs(filename: String) {
+    val dirname = filename.substring(0, filename.lastIndexOf(File.separatorChar))
     new File(dirname).mkdirs()
   }
 }

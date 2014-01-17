@@ -1,7 +1,6 @@
 package edu.umass.ciir.strepsi
 
 import junit.framework.{Assert, TestCase}
-import scala.collection.JavaConversions._
 
 /**
  * User: dietz

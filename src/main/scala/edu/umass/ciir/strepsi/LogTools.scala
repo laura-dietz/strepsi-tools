@@ -13,23 +13,27 @@ object LogTools {
    * @param logProbs probabilities in log space
    * @return log marginal
    */
-  def logExpSumNormalizer(logProbs:Seq[Double]):Double = {
+  def logExpSumNormalizer(logProbs: Seq[Double]): Double = {
     val pi = logProbs.max
     val exp_log_pi =
-      for(logpi <- logProbs) yield {
+      for (logpi <- logProbs) yield {
         math.exp(logpi - pi)
       }
 
     val result = pi + math.log(exp_log_pi.sum)
 
-//    if (result> 0){
-//      throw new Error("logExpSumNormalizer yields "+result+". pi="+pi+" +  exp("+exp_log_pi.sum+") \nexp_log_pi  = Seq("+exp_log_pi.mkString("", ", ", "...")+ ")  \nlogProbs=Seq("+logProbs.mkString("", ", ", "...")+")")
-//    }
-    if (result.isNaN){
-      throw new Error("logExpSumNormalizer yields Nan. pi="+pi+" +  exp("+exp_log_pi.sum+") exp_log_pi  = "+exp_log_pi.take(10).mkString("", ", ", "...")+ "  logProbs="+logProbs.take(10).mkString("", ", ", "..."))
+    //    if (result> 0){
+    //      throw new Error("logExpSumNormalizer yields "+result+". pi="+pi+" +  exp("+exp_log_pi.sum+") \nexp_log_pi  = Seq("+exp_log_pi.mkString("", ", ", "...")+ ")  \nlogProbs=Seq("+logProbs.mkString("", ", ", "...")+")")
+    //    }
+    if (result.isNaN) {
+      throw new Error(
+        "logExpSumNormalizer yields Nan. pi=" + pi + " +  exp(" + exp_log_pi.sum + ") exp_log_pi  = " + exp_log_pi.take(
+          10).mkString("", ", ", "...") + "  logProbs=" + logProbs.take(10).mkString("", ", ", "..."))
     }
-    if (result.isInfinite){
-      throw new Error("logExpSumNormalizer yields Infin. pi="+pi+" +  exp("+exp_log_pi.sum+") exp_log_pi  = "+exp_log_pi.take(10).mkString("", ", ", "...")+ "  logProbs="+logProbs.take(10).mkString("", ", ", "..."))
+    if (result.isInfinite) {
+      throw new Error(
+        "logExpSumNormalizer yields Infin. pi=" + pi + " +  exp(" + exp_log_pi.sum + ") exp_log_pi  = " + exp_log_pi.take(
+          10).mkString("", ", ", "...") + "  logProbs=" + logProbs.take(10).mkString("", ", ", "..."))
     }
     result
   }
@@ -42,7 +46,7 @@ object LogTools {
    * @param logExpNorm compute with #logExpSumNormalizer
    * @return
    */
-  def normLogProb(logProb:Double, logExpNorm:Double):Double = {
+  def normLogProb(logProb: Double, logExpNorm: Double): Double = {
     math.exp(normLogProbLog(logProb, logExpNorm))
   }
 
@@ -53,16 +57,16 @@ object LogTools {
    * @param logExpNorm
    * @return
    */
-  def normLogProbLog(logProb:Double, logExpNorm:Double):Double = {
+  def normLogProbLog(logProb: Double, logExpNorm: Double): Double = {
     val result = logProb - logExpNorm
-    if (result> 0){
-      throw new Error("normLogProbLog yields "+result+". logProb - "+logExpNorm)
+    if (result > 0) {
+      throw new Error("normLogProbLog yields " + result + ". logProb - " + logExpNorm)
     }
-    if (result.isNaN){
-      throw new Error("normLogProbLog yields "+result+". logProb - "+logExpNorm)
+    if (result.isNaN) {
+      throw new Error("normLogProbLog yields " + result + ". logProb - " + logExpNorm)
     }
-    if (result.isInfinite){
-      throw new Error("normLogProb yields Infin "+logProb+" / "+logExpNorm)
+    if (result.isInfinite) {
+      throw new Error("normLogProb yields Infin " + logProb + " / " + logExpNorm)
     }
 
     result
@@ -74,7 +78,7 @@ object LogTools {
    * @param logProbs  unnormalized probabilities in log space
    * @return normalized probabilities
    */
-  def normLogProbs(logProbs:Seq[Double]):Seq[Double]= {
+  def normLogProbs(logProbs: Seq[Double]): Seq[Double] = {
     val norm = logExpSumNormalizer(logProbs)
     for (logPi <- logProbs) yield {
       normLogProb(logPi, norm)
@@ -82,33 +86,36 @@ object LogTools {
   }
 
 
-  def logExpDiff(logProbMax:Double, logProbMin:Double):Option[Double] = {
+  def logExpDiff(logProbMax: Double, logProbMin: Double): Option[Double] = {
     if (logProbMax == logProbMin) return None
     val pi = logProbMax
     val exp_log_pi_diff =
       math.exp(0) - math.exp(logProbMin - logProbMax)
     val result = pi + math.log(exp_log_pi_diff)
 
-    if (result> 0){
-      throw new Error("logExpSumNormalizer yields "+result+". pi="+pi+" +  exp("+exp_log_pi_diff+") logProbMax  = "+logProbMax+" logProbMin = "+logProbMin)
+    if (result > 0) {
+      throw new Error(
+        "logExpSumNormalizer yields " + result + ". pi=" + pi + " +  exp(" + exp_log_pi_diff + ") logProbMax  = " + logProbMax + " logProbMin = " + logProbMin)
     }
-    if (result.isNaN){
-      throw new Error("logExpSumNormalizer yields Nan. pi="+pi+" +  exp("+exp_log_pi_diff+") logProbMax  = "+logProbMax+" logProbMin = "+logProbMin)
+    if (result.isNaN) {
+      throw new Error(
+        "logExpSumNormalizer yields Nan. pi=" + pi + " +  exp(" + exp_log_pi_diff + ") logProbMax  = " + logProbMax + " logProbMin = " + logProbMin)
     }
-    if (result.isInfinite){
-      throw new Error("logExpSumNormalizer yields Infin. pi="+pi+" +  exp("+exp_log_pi_diff+") logProbMax  = "+logProbMax+" logProbMin = "+logProbMin)
+    if (result.isInfinite) {
+      throw new Error(
+        "logExpSumNormalizer yields Infin. pi=" + pi + " +  exp(" + exp_log_pi_diff + ") logProbMax  = " + logProbMax + " logProbMin = " + logProbMin)
     }
     Some(result)
   }
 
 
-  def main(args:Array[String]) {
+  def main(args: Array[String]) {
     val testseq = Seq(0.1, 0.02, 0.08, 0.45, 0.05, 0.3)
 
     val logtest = testseq.map(math.log(_))
-    println("org: "+testseq)
-    println("in:  "+logtest)
-    println("out: "+normLogProbs(logtest))
+    println("org: " + testseq)
+    println("in:  " + logtest)
+    println("out: " + normLogProbs(logtest))
 
   }
 

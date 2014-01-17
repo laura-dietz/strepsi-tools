@@ -1,7 +1,6 @@
 package edu.umass.ciir.strepsi
 
 import collection.mutable.ListBuffer
-import scala.collection.JavaConversions._
 
 /**
  * User: dietz
@@ -9,7 +8,7 @@ import scala.collection.JavaConversions._
  * Time: 4:12 PM
  */
 object SeqTools {
-  def distinctBy[A, B](seq:Seq[A],by:(A => B)):Seq[A] = {
+  def distinctBy[A, B](seq: Seq[A], by: (A => B)): Seq[A] = {
     val newSeq = Seq.newBuilder[A]
     val seen = scala.collection.mutable.HashSet[B]()
     for (x <- seq) {
@@ -22,7 +21,7 @@ object SeqTools {
   }
 
 
-  def distinctByLast[A, B](seq:Seq[A],by:(A => B)):Seq[A] = {
+  def distinctByLast[A, B](seq: Seq[A], by: (A => B)): Seq[A] = {
     distinctBy(seq.reverse, by).reverse
   }
 
@@ -52,27 +51,27 @@ object SeqTools {
   }
 
 
-  def groupByLast[A,B](seq:Iterable[A], by:(A => B)):Map[B,A] = {
-    for((key, values:Iterable[A]) <- seq.groupBy(by)) yield {
+  def groupByLast[A, B](seq: Iterable[A], by: (A => B)): Map[B, A] = {
+    for ((key, values: Iterable[A]) <- seq.groupBy(by)) yield {
       //    for((key:B, values:Iterable[A]) <- seq.groupBy(by)) yield {
       (key -> values.last)
     }
   }
 
-  def groupByKey[A,B](seq:Iterable[(A,B)]):Map[A,Iterable[B]] = {
+  def groupByKey[A, B](seq: Iterable[(A, B)]): Map[A, Iterable[B]] = {
     seq.groupBy(_._1).map(entry => (entry._1, entry._2.map(_._2)))
   }
 
-  def mapValuesToSet[A,B](map:Map[A, Iterable[B]]):Map[A, Set[B]] = {
+  def mapValuesToSet[A, B](map: Map[A, Iterable[B]]): Map[A, Set[B]] = {
     map.map(entry => entry._1 -> entry._2.toSet)
   }
 
-  def aggregateMapList[A,B,C](map:Map[A,Iterable[B]], by:Iterable[B]=>C):Map[A,C] = {
-    for ((key,seq) <- map) yield key -> by(seq)
+  def aggregateMapList[A, B, C](map: Map[A, Iterable[B]], by: Iterable[B] => C): Map[A, C] = {
+    for ((key, seq) <- map) yield key -> by(seq)
   }
 
 
-  def filterByType[A](seq:Seq[Any]):Seq[A] = {
+  def filterByType[A](seq: Seq[Any]): Seq[A] = {
     seq.map(_.asInstanceOf[A])
     //    seq.filter(_.isInstanceOf[A]).map(_.asInstanceOf[A])
   }
@@ -87,16 +86,16 @@ object SeqTools {
    * @tparam B
    * @return
    */
-  def topK[A,B](seq:Seq[(A, B)], k:Int)(implicit ord:Ordering[B]):Seq[(A, B)] = {
+  def topK[A, B](seq: Seq[(A, B)], k: Int)(implicit ord: Ordering[B]): Seq[(A, B)] = {
     if (seq.isEmpty) seq
     else {
-      var topK = new ListBuffer[(A,B)]()
+      var topK = new ListBuffer[(A, B)]()
       topK ++= seq.take(k)
       topK = topK.sortBy(_._2)
 
-      var thresh:B = topK.head._2
-      for((elem, score) <- seq.drop(k)) {
-        if (ord.compare(score, thresh)>0) {
+      var thresh: B = topK.head._2
+      for ((elem, score) <- seq.drop(k)) {
+        if (ord.compare(score, thresh) > 0) {
           topK += Pair(elem, score)
           topK = topK.sortBy(_._2).tail
           thresh = topK.head._2
@@ -106,16 +105,15 @@ object SeqTools {
     }
   }
 
-  def countMap[A](seq:Iterable[A]):Map[A,Int] = {
+  def countMap[A](seq: Iterable[A]): Map[A, Int] = {
     seq.groupBy(x => x).map(entry => entry._1 -> entry._2.size)
   }
 
 
-
-  def sumMaps[K](maps:Seq[Map[K,Int]]):Map[K,Int] ={
+  def sumMaps[K](maps: Seq[Map[K, Int]]): Map[K, Int] = {
     val flattenMaps = maps.map(_.toSeq).flatten
     (
-      for((key, entries) <- flattenMaps.groupBy(_._1)) yield {
+      for ((key, entries) <- flattenMaps.groupBy(_._1)) yield {
         val values = entries.map(_._2)
         key -> values.sum
       }
@@ -133,10 +131,10 @@ object SeqTools {
   }
 
 
-  def mergeMaps[K, V](maps:Seq[Map[K,Seq[V]]]):Map[K,Seq[V]] ={
+  def mergeMaps[K, V](maps: Seq[Map[K, Seq[V]]]): Map[K, Seq[V]] = {
     val flattenMaps = maps.map(_.toSeq).flatten
     (
-      for((key, entries) <- flattenMaps.groupBy(_._1)) yield {
+      for ((key, entries) <- flattenMaps.groupBy(_._1)) yield {
         val values = entries.map(_._2)
         key -> values.flatten
       }
@@ -144,7 +142,7 @@ object SeqTools {
   }
 
 
-  def lastOrMax[A](seq:Seq[A], k:Int):A = {
+  def lastOrMax[A](seq: Seq[A], k: Int): A = {
     if (seq.length <= k) {
       seq.last
     }
@@ -153,7 +151,7 @@ object SeqTools {
     }
   }
 
-  def findKey[A,B](seq:Seq[(A,B)], key:A):Option[B] = {
+  def findKey[A, B](seq: Seq[(A, B)], key: A): Option[B] = {
     seq.find(_._1 == key).map(_._2)
   }
 
