@@ -108,6 +108,24 @@ object LogTools {
     Some(result)
   }
 
+  // ===================
+  // recycled from ksketch
+
+  def logExpSumNormalize[A](docs: Seq[A], getScore:(A)=> Double):Seq[(A,Double)] = {
+    val spotScores = docs.map(sd => sd -> getScore(sd))
+    logExpSumNormalizeBase(spotScores)
+  }
+
+
+  def logExpSumNormalizeBase[A](docs: Seq[(A, Double)]):Seq[(A,Double)] = {
+    val logExpSumNormalizer = LogTools.logExpSumNormalizer(docs.map(_._2))
+    for ((spot, score) <- docs) yield {
+      spot -> LogTools.normLogProb(score, logExpSumNormalizer)
+    }
+  }
+
+
+
 
   def main(args: Array[String]) {
     val testseq = Seq(0.1, 0.02, 0.08, 0.45, 0.05, 0.3)

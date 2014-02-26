@@ -44,6 +44,26 @@ public class StopWordList {
         m_stopSet.add(word);
     }
 
+    public static void removeWord(String word) {
+
+        if (m_stopSet == null) {
+            try {
+                loadFromResources();
+            } catch (Exception e) {
+                System.out.println("failed to load inquery stopword list");
+            }
+        }
+
+        m_stopSet.remove(word);
+    }
+    public static void removeStopWord(String word) {
+        removeWord(word);
+    }
+
+    public static void addStopWord(String word) {
+        addWord(word);
+    }
+
     public static Set<String> getStopWords() {
         if (m_stopSet == null) {
             try {

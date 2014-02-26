@@ -70,6 +70,20 @@ object SeqTools {
     for ((key, seq) <- map) yield key -> by(seq)
   }
 
+  def sumSeq[K,N](seq:Seq[(K,N)])(implicit num:Numeric[N]):Seq[(K,N)] = {
+    for((key, entries) <- seq.groupBy(_._1).toSeq) yield {
+      val values = entries.map(_._2)
+      key -> values.sum
+    }
+  }
+  def sumSeqBy[K,N](seq:Seq[(K,N)], by:(Iterable[N]=>N))(implicit num:Numeric[N]):Seq[(K,N)] = {
+    for((key, entries) <- seq.groupBy(_._1).toSeq) yield {
+      val values = entries.map(_._2)
+      key -> by(values)
+    }
+  }
+
+
 
   def filterByType[A](seq: Seq[Any]): Seq[A] = {
     seq.map(_.asInstanceOf[A])
