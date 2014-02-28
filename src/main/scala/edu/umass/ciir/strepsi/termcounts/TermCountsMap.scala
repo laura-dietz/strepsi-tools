@@ -94,7 +94,7 @@ object TermCollectionCountsMap {
         throw e
     }
     println("Term count size : " + termFrequencyMap.size)
-    (collectionFrequency, termFrequencyMap.toMap)
+    (collectionFrequency, termFrequencyMap.toMap.withDefaultValue((0L,0L)))
   }
 
 
