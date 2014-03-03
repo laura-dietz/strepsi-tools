@@ -34,11 +34,11 @@ class TermCountsMap(galagoTermCountsFilename: String) {
 
   private val termFrequencyCounts = TermCountsMapLoader.loadMap(galagoTermCountsFilename)
 
-  val termFrequencyCountsMap = termFrequencyCounts.result().withDefault(term => (1, 1))
+  val termFrequencyCountsMap = termFrequencyCounts.result()
 
   def main(args: Array[String]) {
     val p = new PrintWriter(galagoTermCountsFilename, "UTF-8")
-    val map = TermCountsMap.this.termFrequencyCountsMap
+    val map = TermCountsMap.this.termFrequencyCountsMap.withDefault(term => (1, 1))
     for (k <- map.keys) {
       val result = map(k)
       val term = k
