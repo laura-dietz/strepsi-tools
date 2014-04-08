@@ -84,6 +84,10 @@ object SeqTools {
   }
 
 
+  def avg(seq:Seq[Double]):Double = {
+    val x = seq.sum
+    x / seq.length
+  }
 
   def filterByType[A](seq: Seq[Any]): Seq[A] = {
     seq.map(_.asInstanceOf[A])
