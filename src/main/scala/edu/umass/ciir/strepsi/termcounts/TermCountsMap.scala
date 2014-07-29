@@ -63,15 +63,22 @@ object TermCollectionCountsMap {
 
   type TermCollectionCounts = (CollectionLen, (Term) => (TermFreq, DocFreq))
 
+  val totalCountKey = "~~total count key"
   /**
    * Create a file with ./galago dump-term-stats
    * @param inputPath
    * @return
    */
   def loadMap(inputPath: String): TermCollectionCounts = {
+    val (total, map:mutable.Map[Term, ((TermFreq, DocFreq))]) = loadMutableMap(inputPath)
+    (total, map.toMap.withDefaultValue((0L,0L)))
+  }
 
-    var collectionFrequency = 0L
-    val termFrequencyMap = new mutable.HashMap[String, (Long, Long)]()
+  def loadMutableMap(inputPath: String): (CollectionLen, mutable.Map[Term, ((TermFreq, DocFreq))]) = {
+
+    var totalCollectionFrequency = 0L
+    var totalDocumentFrequency = 0L
+    val termFrequencyMap = new mutable.HashMap[Term, ((TermFreq, DocFreq))]()
     try {
       val f = io.Source.fromFile(inputPath)
       for (line <- f.getLines()) {
@@ -83,7 +90,8 @@ object TermCollectionCountsMap {
           if (termFrequency > 1) {
             termFrequencyMap += term ->(termFrequency, documentFrequency)
           }
-          collectionFrequency += termFrequency
+          totalCollectionFrequency += termFrequency
+          totalCollectionFrequency += documentFrequency
         } catch {
           case e: Exception => println("Error on line: " + line + " " + e.getMessage)
         }
@@ -93,8 +101,10 @@ object TermCollectionCountsMap {
       case e: Exception => println("Error loading term counts! + " + e)
         throw e
     }
+
+    termFrequencyMap += totalCountKey -> (totalCollectionFrequency, totalDocumentFrequency)
     println("Term count size : " + termFrequencyMap.size)
-    (collectionFrequency, termFrequencyMap.toMap.withDefaultValue((0L,0L)))
+    (totalCollectionFrequency, termFrequencyMap)
   }
 
 
