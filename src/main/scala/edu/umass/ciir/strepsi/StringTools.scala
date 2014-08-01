@@ -50,4 +50,27 @@ object StringTools {
       else endIdx
     str.substring(numCutOfBegin, safeEndIdx)
   }
+
+  def zapParentheses(str:String, beginZap:Char = '(', endZap:Char = ')'):String = {
+    var delete:Int = 0
+    val filteredCharArray =
+      for (c <- str) yield {
+        if (c == beginZap) delete += 1
+        val result =
+          if(delete == 0) Some(c)
+          else None
+        if (c == endZap) delete -= 1
+        result
+      }
+    filteredCharArray.flatten.mkString
+  }
+
+
+  def toIntOption(str:String):Option[Int] = {
+    if (str.isEmpty) None
+    else if( str.head.isDigit ) scala.Some(str.toInt)
+    else None
+  }
+
+
 }
