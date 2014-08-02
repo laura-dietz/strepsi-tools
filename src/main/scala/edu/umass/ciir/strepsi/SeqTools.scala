@@ -1,5 +1,6 @@
 package edu.umass.ciir.strepsi
 
+
 import collection.mutable.ListBuffer
 
 /**
@@ -62,8 +63,21 @@ object SeqTools {
     seq.groupBy(_._1).map(entry => (entry._1, entry._2.map(_._2)))
   }
 
+  def groupByAndAggr[A,B,C,D](seq:Iterable[(A,B)], by:(A => C), aggr:(Iterable[B] => D)):Map[C,D] = {
+    seq.groupBy(entry => by(entry._1))
+      .map(entry => (entry._1, aggr(entry._2.map(_._2))))
+  }
+
   def mapValuesToSet[A, B](map: Map[A, Iterable[B]]): Map[A, Set[B]] = {
     map.map(entry => entry._1 -> entry._2.toSet)
+  }
+
+  def mapValues[A,B,C](map:Map[A,B], lambda:(B)=>C ):Map[A,C] = {
+    map.map(entry => entry._1 -> lambda(entry._2))
+  }
+
+  def mapValuesToDouble[A,N](map:Map[A,N])(implicit num: Numeric[N]):Map[A,Double] = {
+    SeqTools.mapValues[A,N,Double](map, num.toDouble)
   }
 
   def aggregateMapList[A, B, C](map: Map[A, Iterable[B]], by: Iterable[B] => C): Map[A, C] = {
@@ -83,6 +97,10 @@ object SeqTools {
     }
   }
 
+
+  def innerProduct[K](featureVector :Seq[(K,Double)], weights:Map[K,Double]):Double = {
+    (for((feature, value) <- featureVector) yield value * weights(feature)).sum
+  }
 
   def avg(seq:Seq[Double]):Double = {
     val x = seq.sum
@@ -137,6 +155,17 @@ object SeqTools {
       }
       ).toMap
   }
+
+  def sumDoubleMaps[K](maps:Seq[Map[K,Double]]):Map[K,Double] ={
+    val flattenMaps = maps.map(_.toSeq).flatten
+    (
+      for((key, entries) <- flattenMaps.groupBy(_._1)) yield {
+        val values = entries.map(_._2)
+        key -> values.sum
+      }
+      ).toMap
+  }
+
 
   def sumSeqs[K](maps: Seq[Seq[(K, Double)]]): Seq[(K, Double)] = {
     val flattenMaps = maps.flatten
