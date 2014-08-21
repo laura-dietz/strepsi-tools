@@ -1,5 +1,7 @@
 package edu.umass.ciir.strepsi
 
+import java.io.InputStream
+
 /**
  * User: dietz
  * Date: 12/13/12
@@ -31,6 +33,17 @@ object StringTools {
       None
     else
       Some(chunks(idx))
+  }
+
+  def readStreamContents(is: InputStream, sepStr: String = " "): String = {
+    val source = io.Source.fromInputStream(is)
+    try {
+      val content = source.getLines().mkString("\n")
+      content
+    } finally {
+      if (source != null) source.close()
+      if (is != null) is.close()
+    }
   }
 
   def readFileContents(filename: String, sepStr: String = " "): String = {
