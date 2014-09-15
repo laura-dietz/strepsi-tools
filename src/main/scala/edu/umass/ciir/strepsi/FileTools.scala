@@ -25,4 +25,7 @@ object FileTools {
     val dirname = filename.substring(0, filename.lastIndexOf(File.separatorChar))
     new File(dirname).mkdirs()
   }
+  def makeDirs(dirname: String) {
+    new File(dirname).mkdirs()
+  }
 }
