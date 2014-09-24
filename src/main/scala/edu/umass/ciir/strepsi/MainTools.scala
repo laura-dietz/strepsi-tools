@@ -13,7 +13,7 @@ object MainTools {
     else default
   }
 
-
+  /** @deprecated use strsFromArgsSimple */
   def strsFromArgs(args: Array[String], prefix: String, min: Int = -1, cutPrefix: Boolean = false): Seq[String] = {
     val found = args.toSeq.filter(_.startsWith(prefix))
     if (min >= 0 && found.length < min) {
@@ -28,6 +28,7 @@ object MainTools {
       } else res
     res2.map(_.replaceAllLiterally("_", " "))
   }
+
 
   def strsPlainFromArgs(args: Array[String], prefix: String): Seq[String] = {
     val found = args.toSeq.filter(_.startsWith(prefix))
@@ -44,6 +45,32 @@ object MainTools {
         argsX
       }
     args
+  }
+
+
+  def strsFromArgsSimple(args: Array[String], prefix: String, min: Int = -1, cutPrefix: Boolean = false): Seq[String] = {
+    val found = args.toSeq.filter(_.startsWith(prefix))
+    if (min >= 0 && found.length < min) {
+      throw new IllegalArgumentException(
+        "Required at least " + min + " entries starting with " + prefix + " but got \"" + found.mkString(
+          " ") + "\". Total arguments: \"" + args.mkString(" ") + "\"")
+    }
+    val res = found.map(_.substring(prefix.length))
+    val res2 =
+      if (cutPrefix) {
+        res.map(arg => StringTools.substringMinusEnd(arg, 0, prefix.length))
+      } else res
+    res2
+  }
+
+
+
+  def strsWithWhitespaceFromArgsSimple(args: Array[String], prefix: String, min: Int = -1, cutPrefix: Boolean = true, whitespaceReplacement:String="_"): Seq[String] = {
+    strsFromArgsSimple(args, prefix, min, cutPrefix).map(_.replaceAllLiterally(whitespaceReplacement, " "))
+  }
+
+  def listsFromArgsSimple(args: Array[String], prefix: String, min: Int = -1, cutPrefix: Boolean = true, listSeparator:String): Seq[Seq[String]] = {
+    strsFromArgsSimple(args, prefix, min, cutPrefix).map(_.split(listSeparator).toSeq)
   }
 
 
