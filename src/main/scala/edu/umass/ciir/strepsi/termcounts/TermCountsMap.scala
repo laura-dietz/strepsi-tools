@@ -1,9 +1,10 @@
 package edu.umass.ciir.strepsi.termcounts
 
 import java.io.PrintWriter
-import scala.collection.mutable
-import scala.collection.mutable.HashMap
+
 import edu.umass.ciir.strepsi.TextNormalizer
+
+import scala.collection.mutable
 
 
 object TermCountsMapLoader {
@@ -91,7 +92,7 @@ object TermCollectionCountsMap {
             termFrequencyMap += term ->(termFrequency, documentFrequency)
           }
           totalCollectionFrequency += termFrequency
-          totalCollectionFrequency += documentFrequency
+//          totalDocumentFrequency += documentFrequency
         } catch {
           case e: Exception => println("Error on line: " + line + " " + e.getMessage)
         }
