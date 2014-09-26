@@ -8,6 +8,14 @@ import java.io.InputStream
  * Time: 2:43 PM
  */
 object StringTools {
+  def splitOnPattern(line:String, pattern:String):Option[(String,String)] = {
+    val offset = line.indexOf(pattern)
+    if(offset <0) None
+    else {
+      Some(line.substring(0,offset), line.substring(offset+pattern.length))
+    }
+  }
+
   def getTabSplits(line: String, min: Int): Seq[String] = {
     val chunks = line.split("\t")
     if (chunks.length < min) throw new Error(
