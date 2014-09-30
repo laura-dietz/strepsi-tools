@@ -232,6 +232,15 @@ object Distribution {
     (floormass + add)
   }
 
+  def posterior[E,T](data : Iterable[(E, Distribution[T])], prior:(E) => Double = (x:E) => 1.0):Map[T, Distribution[E]]  = {
+    val universe = data.map(_._1).toSeq
+    val regrouped  = for((entity, distr) <- data; (term,prob) <- distr.nonzeroDistr) yield term -> (entity -> prob * prior(entity))
+    for( (term, seq) <- SeqTools.groupByKey(regrouped)) yield {
+      term -> Distribution.createDistribution(seq.toSeq, universe = universe).normalize
+    }
+  }
+
+
   //  def mixExpectedCounts[Elem](expectedLength:Double, weightedDistrSeqs:Seq[(Seq[Distribution[Elem]],Double)]):Map[Elem,Int] = {
   //    weightedDistrSeqsIndexed = weightedDistrSeqs.toIndexedSeq
   //    val outerSeq: Seq[(Int, Nothing)] = for (((distr, weighted), idx) <- weightedDistrSeqs.zipWithIndex) yield idx -> weight
