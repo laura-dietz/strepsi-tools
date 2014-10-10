@@ -202,4 +202,19 @@ object SeqTools {
     seq.find(_._1 == key).map(_._2)
   }
 
+  def flattenByFirstSeq[A,B](seq:Seq[(Option[A], B)]):Seq[(A,B)] = {
+    seq.filter(_._1.isDefined).map(x => x._1.get -> x._2)
+  }
+
+  def flattenByFirstMap[A,B](seq:Map[Option[A], B]):Map[A,B] = {
+    seq.filter(_._1.isDefined).map(x => x._1.get -> x._2)
+  }
+
+  def xflattenByFirst[A,B, That<:Iterable[(Option[A],B)]](x:That) = x.filter(_._1.isDefined).map(x => x._1.get -> x._2)
+
+
+  def flattenBySecond[A,B](seq:Iterable[(A, Option[B])]):Iterable[(A,B)]  = {
+    seq.filter(_._2.isDefined).map(x => x._1 -> x._2.get)
+  }
+
 }
