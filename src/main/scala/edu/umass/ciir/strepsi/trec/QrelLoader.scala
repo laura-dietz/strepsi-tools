@@ -32,12 +32,14 @@ object QrelLoader {
     val judgments =  new ListBuffer[SessionJudgment]()
     while(reader.ready) {
       val line = reader.readLine
-      val columns = StringTools.getSepSplits(line, "\t", 4)
-      val queryId = columns(0).trim
-      val sessionId = columns(1).trim
-      val docId = columns(2).trim
-      val relevance = columns(3).trim.toInt
-      judgments += SessionJudgment(queryId, docId, relevance, sessionName = sessionId)
+      if(line.trim.length>0) {
+        val columns = StringTools.getSepSplits(line, "\t", 4)
+        val queryId = columns(0).trim
+        val sessionId = columns(1).trim
+        val docId = columns(2).trim
+        val relevance = columns(3).trim.toInt
+        judgments += SessionJudgment(queryId, docId, relevance, sessionName = sessionId)
+      }
     }
     reader.close()
 
