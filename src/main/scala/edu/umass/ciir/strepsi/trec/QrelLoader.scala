@@ -24,4 +24,22 @@ object QrelLoader {
     map
   }
 
+  def fromTrecSessionTabs(src: String, useBinary: Boolean = false, complainFn:((String, String, Seq[SessionJudgment]) => Option[SessionJudgment])): Map[String,Seq[Judgment]] = {
+    val reader = Source.fromFile(src).bufferedReader()
+
+    val judgments =  new ListBuffer[SessionJudgment]()
+    while(reader.ready) {
+      val line = reader.readLine
+      val columns = line.split("\t")
+      val queryId = columns(0).trim
+      val sessionId = columns(0).trim
+      val docId = columns(2).trim
+      val relevance = columns(3).trim.toInt
+      judgments += SessionJudgment(queryId, docId, relevance, sessionName = sessionId)
+    }
+    reader.close()
+
+    SessionJudgment.mergeSessionsComplain(SessionJudgment.groupByQuery(judgments), complainFn )
+  }
+
 }

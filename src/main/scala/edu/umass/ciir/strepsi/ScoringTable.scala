@@ -24,4 +24,10 @@ class ScoringTable[Item] extends scala.collection.mutable.HashMap[Item, Double] 
   def sortedBy(by:(Double)=> Double = x => -x): Seq[(Item,Double)] = {
     this.toList.sortBy(pair => by(pair._2))
   }
+  def sortedDescend: Seq[(Item,Double)] = {
+    this.toList.sortBy(- _._2)
+  }
+  def sortedAscend: Seq[(Item,Double)] = {
+    this.toList.sortBy(_._2)
+  }
 }
