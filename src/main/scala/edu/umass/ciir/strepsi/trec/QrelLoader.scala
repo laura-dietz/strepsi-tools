@@ -27,7 +27,7 @@ object QrelLoader {
   }
 
   def fromTrecSessionTabs(src: String, useBinary: Boolean = false, complainFn:((String, String, Seq[SessionJudgment]) => Option[SessionJudgment])): Map[String,Seq[Judgment]] = {
-    val reader = Source.fromFile(src).bufferedReader()
+    val reader = Source.fromFile(src, "UTF-8").bufferedReader()
 
     val judgments =  new ListBuffer[SessionJudgment]()
     while(reader.ready) {
